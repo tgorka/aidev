@@ -1,0 +1,38 @@
+---
+description: TypeScript coding conventions for makistack
+globs: "**/*.ts"
+---
+
+# TypeScript Conventions
+
+## Module System
+
+- Use ESM: `import`/`export` only. Never use `require()` or `module.exports`.
+- File extensions are not needed in imports (bundler module resolution).
+
+## Style
+
+- Strict mode is enabled (`"strict": true` in tsconfig).
+- Target: ES2024. Use modern JS features (top-level await, `using`, `Array.at()`, etc.).
+- Prefer `const` over `let`. Never use `var`.
+- Use explicit return types on exported functions.
+- Use `interface` for object shapes, `type` for unions/intersections.
+
+## Naming
+
+- Files: `kebab-case.ts` (e.g., `proxmox-vm.ts`)
+- Classes/Interfaces: `PascalCase`
+- Functions/variables: `camelCase`
+- Constants: `UPPER_SNAKE_CASE` for true constants, `camelCase` for derived values
+- Pulumi resource names: `kebab-case` (e.g., `"web-server"`, `"docker-network"`)
+
+## Error Handling
+
+- Wrap Pulumi resource creation in try/catch when dealing with external providers.
+- Use `pulumi.log.warn()` / `pulumi.log.error()` for infrastructure warnings.
+- Never swallow errors silently.
+
+## Imports
+
+- Group imports: (1) node built-ins, (2) third-party, (3) local
+- Sort alphabetically within each group.

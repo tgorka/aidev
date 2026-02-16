@@ -1,0 +1,7 @@
+{
+  "setup-worktree": [
+    "ln -sf \"$ROOT_WORKTREE_PATH/.env.local\" .env.local",
+    "bun install",
+    "gt init 2>/dev/null || true"
+  ]
+}

@@ -1,0 +1,59 @@
+---
+description: Trunk-based development workflow with Graphite
+alwaysApply: true
+---
+
+# Git Workflow
+
+## Trunk-Based Development with Graphite
+
+This project uses trunk-based development. All changes go through PRs — never commit directly to `main`.
+
+## Branch Creation
+
+```bash
+# Create a new branch off main
+gt create -m "feat: add media server VM"
+
+# Or with a specific branch name
+gt create -a -m "feat: add media server VM"
+```
+
+## Submitting PRs
+
+```bash
+# Submit PR with title, body, and publish immediately
+gt submit --publish --reviewers tgorka
+
+# Submit entire stack
+gt submit --stack --publish --reviewers tgorka
+
+# Quick submit (no-edit, publish)
+gt ss -np
+```
+
+## Commit Messages
+
+Use conventional commits format:
+
+- `feat:` — new infrastructure resource or feature
+- `fix:` — bug fix in existing infrastructure
+- `refactor:` — restructure without changing behavior
+- `docs:` — documentation changes
+- `ci:` — CI/CD changes
+- `chore:` — tooling, dependencies, config
+
+## PR Description
+
+Always include:
+1. Summary of what changed and why
+2. Type of change (infra/config/docs/fix)
+3. `pulumi preview` output for infrastructure changes
+
+## Rules
+
+- **NEVER push directly to `main`.**
+- **NEVER force-push to shared branches.**
+- Always assign `tgorka` as reviewer.
+- Keep PRs small and focused — one logical change per PR.
+- Run `bun run build && bun run lint && bun run test` before submitting.

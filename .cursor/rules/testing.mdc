@@ -1,0 +1,50 @@
+---
+description: Vitest testing patterns for Pulumi resources
+globs: "**/*.test.ts"
+---
+
+# Testing Conventions
+
+## Framework
+
+- Use Vitest (`bun run test` / `bun run test:watch`).
+- Test files: `*.test.ts` alongside source files or in `__tests__/` directories.
+
+## Structure
+
+```typescript
+import { describe, it, expect, beforeAll } from "vitest";
+import * as pulumi from "@pulumi/pulumi";
+
+describe("MediaStack", () => {
+  beforeAll(() => {
+    pulumi.runtime.setMocks({
+      newResource: (args) => ({ id: `${args.name}-id`, state: args.inputs }),
+      call: (args) => args.inputs,
+    });
+  });
+
+  it("should create a VM with correct properties", async () => {
+    // Import after mocks are set
+    const { mediaVm } = await import("../src/media-stack");
+    const name = await new Promise<string>((resolve) =>
+      mediaVm.name.apply(resolve)
+    );
+    expect(name).toBe("media-server-vm");
+  });
+});
+```
+
+## Patterns
+
+- Use `pulumi.runtime.setMocks()` in `beforeAll` to mock the Pulumi engine.
+- Import modules under test **after** setting mocks.
+- Test resource outputs using `apply()` with promise wrappers.
+- Focus on resource configuration correctness, not Pulumi internals.
+
+## Running Tests
+
+```bash
+bun run test          # Single run
+bun run test:watch    # Watch mode
+```

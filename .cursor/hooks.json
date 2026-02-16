@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "hooks": {
+    "stop": [{ "command": ".cursor/hooks/agent-audit.sh" }],
+    "subagentStop": [{ "command": ".cursor/hooks/agent-audit.sh" }],
+    "afterShellExecution": [
+      {
+        "command": ".cursor/hooks/agent-audit.sh",
+        "matcher": "gt |gh |git |bun run"
+      }
+    ]
+  }
+}

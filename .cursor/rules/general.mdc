@@ -1,0 +1,44 @@
+---
+description: makistack project context and conventions
+alwaysApply: true
+---
+
+# Project Context
+
+makistack is a Pulumi Infrastructure as Code (IaC) project for homelab management.
+It provisions and manages Proxmox VMs, Docker containers, and related infrastructure.
+
+## Stack
+
+- **Language**: TypeScript (strict, ES2024, ESM)
+- **Package Manager**: Bun >= 1.2 (officially supported by Pulumi as package manager)
+- **Testing**: Vitest
+- **Linting/Formatting**: ESLint 9 (flat config), Prettier
+
+## Critical Rules
+
+- **NEVER use npm, yarn, or pnpm.** Always use `bun` for package management (`bun install`, `bun add`, `bun run`).
+- **NEVER commit directly to the `main` branch.** Use Graphite `gt` for trunk-based development with PRs.
+- **Pulumi runtime is Node.js** — Bun is the package manager only, not the runtime.
+
+## Communication
+
+- Chat with the user in Polish.
+- All code, comments, commit messages, PR descriptions, and documentation must be in English.
+
+## BMAD Framework
+
+This project integrates the BMAD (Build Method for AI Development) framework in `_bmad/`.
+Use BMAD commands (available in `.cursor/commands/bmad-*`) for product development workflows.
+
+## Project Structure
+
+```
+src/           — Pulumi infrastructure code (main entry: src/index.ts)
+dist/          — Compiled output (gitignored)
+_bmad/         — BMAD framework modules and configuration
+.cursor/       — Cursor IDE commands and rules
+.opencode/     — OpenCode CLI commands
+.devcontainer/ — Dev container configuration
+.github/       — PR templates, CI workflows, issue templates
+```

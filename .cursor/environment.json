@@ -1,0 +1,17 @@
+{
+  "$schema": "https://www.cursor.com/schemas/environment.schema.json",
+  "snapshot": "POPULATED_FROM_SETTINGS",
+  "build": {
+    "context": ".devcontainer",
+    "dockerfile": "Dockerfile"
+  },
+  "install": "bun install && if [ -f .envrc ]; then direnv allow .; fi",
+  "terminals": [],
+  "env": {
+    "EDITOR": "cursor --wait",
+    "VISUAL": "cursor --wait",
+    "PULUMI_SKIP_UPDATE_CHECK": "true",
+    "NODE_ENV": "development"
+  },
+  "persistedDirectories": ["node_modules", ".pulumi"]
+}

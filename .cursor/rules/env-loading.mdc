@@ -1,0 +1,31 @@
+---
+description: Load environment variables from .env.local before running CLI tools that require authentication
+globs:
+alwaysApply: false
+---
+
+# Environment Variable Loading
+
+Before running any CLI tool that requires authentication (`gh`, `gt`, `pulumi`, or any tool relying on tokens), you MUST load environment variables from `.env.local`.
+
+## Shell Command
+
+Run this as your **first shell command** in the session, before any authenticated CLI calls:
+
+```bash
+set -a && source .env.local && set +a && export GH_TOKEN="${GITHUB_TOKEN:-}"
+```
+
+## What This Does
+
+- `set -a` — marks all new/modified variables for export
+- `source .env.local` — loads all variables from the file
+- `set +a` — stops auto-exporting
+- `export GH_TOKEN` — aliases `GITHUB_TOKEN` to `GH_TOKEN` (required by `gh` CLI)
+
+## Important Notes
+
+- The shell is **stateful** — source once per session, all subsequent shell calls inherit the vars.
+- Tokens are stored in `.env.local` (gitignored). See `.env.example` for the template.
+- Key variables: `GITHUB_TOKEN`/`GH_TOKEN` (GitHub), `GT_TOKEN` (Graphite).
+- If `.env.local` does not exist, warn the user and ask them to create it from `.env.example`.
