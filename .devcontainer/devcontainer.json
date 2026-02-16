@@ -68,8 +68,11 @@
     }
   },
 
-  // Commands to run after the container is created
-  "postCreateCommand": "bash -c 'cd /workspace && if [ -f package.json ]; then bun install; fi && if [ -f .envrc ]; then direnv allow .; fi'",
+  // Commands to run after the container is created (once)
+  "postCreateCommand": "bash -c 'cd /workspace && if [ -f package.json ]; then bun install; fi'",
+
+  // Commands to run every time the container starts
+  "postStartCommand": "sudo git config --system safe.directory /workspace && if [ -f /workspace/.envrc ]; then direnv allow /workspace; fi",
 
   // Features: add common utilities
   "features": {

@@ -17,8 +17,8 @@ The orchestrator invokes you with a prompt containing:
 
 - **Description of changes** (or you analyze `git diff` yourself)
 - **`force=true`** (optional) — skip quality gate and AI review polling
-- **`title=<string>`** (optional) — explicit PR title override
-- **`summary=<string>`** (optional) — explicit PR summary override
+
+> **Note:** PR title and description are generated automatically by Graphite AI via `--ai` flag on `gt submit`. Do NOT generate custom PR titles or descriptions — only generate a **commit message** for `gt create`.
 
 ---
 
@@ -74,7 +74,7 @@ Run `git status --porcelain`. If output is empty, return **FAILED**: "No changes
 
 ### Step 2.2: Analyze changes
 
-Run `git diff --stat` and `git diff` (or `git diff --cached` if changes are staged). Use this to auto-generate the PR title and summary in Step 3.1 (unless the orchestrator provided explicit overrides).
+Run `git diff --stat` and `git diff` (or `git diff --cached` if changes are staged). Use this to generate the commit message in Step 3.1.
 
 ### Step 2.3: Run quality checks
 
@@ -127,17 +127,17 @@ Update execution state after each successful step: add step name to context, upd
 
 ## PHASE 3: BRANCH & PR CREATION
 
-### Step 3.1: Generate PR metadata
+### Step 3.1: Generate commit message
 
 - Analyze the `git diff` output from Phase 2 (or run it now if in force mode).
-- Generate a **conventional commit title** (e.g., `feat: add VM provisioning`, `fix: correct Docker network config`, `refactor: extract shared utilities`) — this is always needed for the commit message in `gt create`.
-- If the orchestrator provided explicit `title`, use it instead. If the orchestrator provided explicit `summary`, save it for later.
-- A full PR summary is NOT generated here — Graphite AI will generate the PR title and description automatically during submit (via `--ai` flag). The summary is only needed as fallback if `gt submit` fails.
+- Generate a **conventional commit message** (e.g., `feat: add VM provisioning`, `fix: correct Docker network config`, `refactor: extract shared utilities`).
+- This commit message is used ONLY for `gt create -a -m "<message>"`. It is NOT the PR title or description.
+- **Do NOT generate a PR title or description** — Graphite AI handles this automatically via `--ai` flag on `gt submit`.
 
 ### Step 3.2: Create stacked branch
 
 ```bash
-gt create -a -m "<title>"
+gt create -a -m "<commit message>"
 ```
 
 - This creates a new branch stacked on top of the current branch and commits all changes.
@@ -145,7 +145,7 @@ gt create -a -m "<title>"
 - If `gt create` fails, try the fallback:
   ```bash
   git add -A
-  git commit -m "<title>"
+  git commit -m "<commit message>"
   ```
 
 Record the new branch name from `git branch --show-current` → save as `branch`.
@@ -159,7 +159,7 @@ gt submit --publish --stack --ai --no-edit --reviewers tgorka
 - `--stack` ensures all branches in the current stack are submitted together, maintaining proper Graphite stack relationships.
 - `--ai` auto-generates PR title and description for new PRs via Graphite AI.
 
-If `gt submit` fails, generate a concise PR summary (2-5 sentences) if not already available, then use the **fallback chain**:
+If `gt submit` fails, generate a concise PR title (conventional commit format) and summary (2-5 sentences) from the diff as fallback, then use the **fallback chain**:
 
 1. Push the branch:
 
@@ -167,9 +167,9 @@ If `gt submit` fails, generate a concise PR summary (2-5 sentences) if not alrea
    git push -u origin HEAD
    ```
 
-2. Create PR via GitHub CLI:
+2. Create PR via GitHub CLI (only here generate title/summary as fallback since `--ai` is unavailable):
    ```bash
-   gh pr create --title "<title>" --body "<summary>" --reviewer tgorka --assignee tgorka --label review
+   gh pr create --title "<fallback title>" --body "<fallback summary>" --reviewer tgorka --assignee tgorka --label review
    ```
 
 ### Step 3.4: Set PR metadata
@@ -180,12 +180,6 @@ After successful submit, add the label and assignee:
 gh pr edit --add-label review --add-assignee tgorka
 ```
 
-If the orchestrator provided explicit `title` and/or `summary` overrides, apply them now (overriding the AI-generated metadata):
-
-```bash
-gh pr edit --title "<title>" --body "<summary>"
-```
-
 Extract and save the PR URL. You can get it from `gt submit` output, or:
 
 ```bash
@@ -193,6 +187,8 @@ gh pr view --json url --jq '.url'
 ```
 
 Save `prUrl` and `prNumber` in execution state.
+
+> **Note:** Do NOT override the AI-generated PR title or description. Graphite AI via `--ai` handles this.
 
 ---
 
@@ -381,7 +377,7 @@ If any step fails unexpectedly (not a quality gate failure):
 - **Always load environment variables** before running `gh`, `gt`, or `git push`.
 - **Prefer `gt` over raw `git`**, but use `git` as fallback when `gt` fails.
 - **Always submit with `--stack`** to maintain Graphite stack relationships between PRs.
-- **Use `--ai` flag** on `gt submit` for new PRs to let Graphite AI generate PR title and description.
+- **Always use `--ai` flag** on `gt submit` — Graphite AI generates the PR title and description. Never generate custom PR titles or descriptions.
 - **Always write logs** to `_logs/pr-create/` for every run.
 - **Always clean up** `_state/pr-create.json` before returning.
 - **Communicate in Polish** with the orchestrator, but all code/commits/PR content in English.
