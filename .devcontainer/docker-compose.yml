@@ -1,0 +1,42 @@
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Project workspace
+      - ..:/workspace:cached
+
+      # Docker-outside-of-docker: share host Docker socket
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      # Persist node_modules in a named volume for performance
+      - node_modules:/workspace/node_modules
+
+      # Persist Bun global cache
+      - bun-cache:/home/node/.bun
+
+      # Persist shell history
+      - bash-history:/home/node/.bash_history_dir
+
+    # Keep container running
+    command: sleep infinity
+
+    # Environment variables
+    environment:
+      - NODE_ENV=development
+
+    # Use host network for easy access to homelab services
+    # (Proxmox API, self-hosted Git, etc.)
+    network_mode: host
+
+    # Allow ptrace for debugging
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+
+volumes:
+  node_modules:
+  bun-cache:
+  bash-history:
