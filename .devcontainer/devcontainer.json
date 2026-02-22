@@ -1,5 +1,5 @@
 {
-  "name": "aidev",
+  "name": "PROJECT",
   "dockerComposeFile": "docker-compose.yml",
   "service": "devcontainer",
   "workspaceFolder": "/workspace",

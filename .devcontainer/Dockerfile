@@ -1,5 +1,5 @@
 # =============================================================================
-# aidev Devcontainer
+# PROJECT Devcontainer
 # Base: Debian Trixie + Node.js 25
 # Purpose: AI based project developlemt
 # =============================================================================
@@ -124,7 +124,7 @@ RUN echo 'eval "$(direnv hook bash)"' >> "${HOME}/.bashrc" \
 # ---------------------------------------------------------------------------
 # Shell configuration
 # ---------------------------------------------------------------------------
-RUN echo '\n# makistack devcontainer paths' >> "${HOME}/.bashrc" \
+RUN echo '\n# PROJECT devcontainer paths' >> "${HOME}/.bashrc" \
     && echo 'export PATH="${HOME}/.local/bin:${HOME}/.bun/bin:${HOME}/.pulumi/bin:${PATH}"' >> "${HOME}/.bashrc" \
     && echo '' >> "${HOME}/.bashrc" \
     && echo '# Git-aware prompt' >> "${HOME}/.bashrc" \

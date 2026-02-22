@@ -1,5 +1,5 @@
 ---
-description: TypeScript coding conventions for makistack
+description: TypeScript coding conventions for PROJECT
 globs: "**/*.ts"
 ---
 

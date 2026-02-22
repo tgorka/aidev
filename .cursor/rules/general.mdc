@@ -1,12 +1,11 @@
 ---
-description: makistack project context and conventions
+description: PROJECT DESCRIPTION
 alwaysApply: true
 ---
 
 # Project Context
 
-makistack is a Pulumi Infrastructure as Code (IaC) project for homelab management.
-It provisions and manages Proxmox VMs, Docker containers, and related infrastructure.
+PROJECT OVERVIEW
 
 ## Stack
 

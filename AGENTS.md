@@ -1,16 +1,14 @@
-# makistack — Project Rules
+# PROJECT — Project Rules
 
 ## Overview
 
-makistack is a Pulumi Infrastructure as Code (IaC) project for homelab management.
-It provisions and manages Proxmox VMs, Docker containers, and related infrastructure.
+PROJECT OVERVIEW
 
 ## Stack
 
 - **Language**: TypeScript (strict mode, ES2024, ESM modules)
-- **IaC Framework**: Pulumi v3 with Node.js 25 runtime
+- **IaC Framework**: Pulumi v3 with Node.js 25 runtime (if needed)
 - **Package Manager**: Bun >= 1.2 (officially supported by Pulumi — never use npm/yarn/pnpm)
-- **Providers**: Proxmox VE (`@muhlba91/pulumi-proxmoxve`), Docker (`@pulumi/docker`), Command (`@pulumi/command`)
 - **Testing**: Vitest
 - **Linting**: ESLint 9 (flat config)
 - **Formatting**: Prettier
@@ -49,7 +47,7 @@ It provisions and manages Proxmox VMs, Docker containers, and related infrastruc
 ## Project Structure
 
 ```
-src/           — Pulumi infrastructure code (entry: src/index.ts)
+src/           — Source code
 dist/          — Compiled output (gitignored)
 _bmad/         — BMAD framework modules and configuration
 _state/        — Agent execution state (gitignored JSON, except bmad-progress-*.json)
@@ -70,14 +68,11 @@ bun run test       # Run tests (Vitest)
 bun run test:watch # Watch mode tests
 bun run lint       # ESLint
 bun run format     # Prettier
-bun run preview    # Pulumi preview
-bun run up         # Pulumi up (deploy)
-bun run destroy    # Pulumi destroy
 ```
 
 ## Environment Variables
 
-Before running CLI tools that require authentication (`gh`, `gt`, `pulumi`), load tokens from `.env.local`:
+Before running CLI tools that require authentication (`gh`, `gt`, `pulumi`, `cubic`), load tokens from `.env.local`:
 
 ```bash
 set -a && source .env.local && set +a && export GH_TOKEN="${GITHUB_TOKEN:-}"
