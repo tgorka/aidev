@@ -49,6 +49,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Python (useful for some Pulumi providers / scripting)
     python3 \
     python3-pip \
+    # Python virtual environment
+    python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
 # NOTE: Docker CLI is installed via the docker-outside-of-docker devcontainer
